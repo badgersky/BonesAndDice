@@ -17,10 +17,10 @@ public class Main extends Game {
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont();
-        viewport = new FitViewport(8, 5);
+        viewport = new FitViewport(12, 7.5f);
 
         font.setUseIntegerPositions(false);
-        font.getData().setScale((float)viewport.getScreenHeight() / Gdx.graphics.getHeight());
+        font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight());
 
         this.setScreen(new MainMenuScreen(this));
     }

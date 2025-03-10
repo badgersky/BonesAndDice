@@ -21,8 +21,8 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
         game.batch.begin();
-        game.font.draw(game.batch, "Welcome to BonesAndDice!!!", 1, 1.5f);
-        game.font.draw(game.batch, "Tap Anywhere to Start!", 1, 1);
+        game.font.draw(game.batch, "Welcome to BonesAndDice!!!", 4, 4.5f);
+        game.font.draw(game.batch, "Tap Anywhere to Start!", 4, 4);
         game.batch.end();
 
         if (Gdx.input.isTouched()) {
