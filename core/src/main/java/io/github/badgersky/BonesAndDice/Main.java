@@ -9,9 +9,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
-    private SpriteBatch batch;
-    private BitmapFont font;
-    private FitViewport viewport;
+    public SpriteBatch batch;
+    public BitmapFont font;
+    public FitViewport viewport;
 
     @Override
     public void create() {
@@ -22,7 +22,7 @@ public class Main extends Game {
         font.setUseIntegerPositions(false);
         font.getData().setScale((float)viewport.getScreenHeight() / Gdx.graphics.getHeight());
 
-        this.setScreen(new MainMenu());
+        this.setScreen(new MainMenuScreen(this));
     }
 
     @Override
