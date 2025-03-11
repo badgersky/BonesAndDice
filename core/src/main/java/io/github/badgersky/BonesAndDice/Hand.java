@@ -1,7 +1,9 @@
 package io.github.badgersky.BonesAndDice;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
 
 public class Hand {
 
@@ -20,6 +22,82 @@ public class Hand {
         }
     }
 
+    public boolean hasNoPoints() {
+        ArrayList<Integer> diceValues = new ArrayList<>();
+
+        for (Dice d : dices) {
+            diceValues.add(d.getValue());
+        }
+        Collections.sort(diceValues);
+
+        if (diceValues.contains(1) || diceValues.contains(5)) {
+            return false;
+        }
+
+        for (int value : diceValues) {
+            if (countOccurrences(value, diceValues) >= 3) {
+                return false;
+            }
+        }
+
+        if (has16(diceValues)) {
+            return false;
+        } else if (has15(diceValues)) {
+            return false;
+        } else if (has26(diceValues)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean has26(ArrayList<Integer> numbers) {
+        boolean res = true;
+
+        for (int i = 1; i <= 6; i++) {
+            if (!numbers.contains(i)) {
+                res = false;
+                return res;
+            }
+        }
+
+        return res;
+    }
+
+    public boolean has15(ArrayList<Integer> numbers) {
+        boolean res = true;
+
+        for (int i = 1; i <= 5; i++) {
+            if (!numbers.contains(i)) {
+                res = false;
+                return res;
+            }
+        }
+
+        return res;
+    }
+
+    public boolean has16(ArrayList<Integer> numbers) {
+        Collections.sort(numbers);
+
+        if (numbers.equals(Arrays.asList(1, 2, 3, 4, 5, 6))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public int countOccurrences(int num, ArrayList<Integer> numbers) {
+        int res = 0;
+        for (int n : numbers) {
+            if (num == n) {
+                res++;
+            }
+        }
+
+        return res;
+    }
+
     public void rollNand() {
         for (Dice dice : dices) {
             dice.rollDice();
@@ -28,24 +106,9 @@ public class Hand {
 
     public void selectDice(int i) {
         dices.get(i).markSelected();
-        moveToSelected();
     }
 
     public void unselectDice(int i) {
         dices.get(i).markUnselected();
-        removeFromSelectd();
-    }
-
-    public void moveToSelected() {
-        Iterator<Dice> it = dices.iterator();
-        while (it.hasNext()) {
-            if (it.next().selected) {
-                selectedDices.add(it.next());
-            }
-        }
-    }
-
-    public void removeFromSelectd() {
-        selectedDices.removeIf(dice -> !dice.selected);
     }
 }
