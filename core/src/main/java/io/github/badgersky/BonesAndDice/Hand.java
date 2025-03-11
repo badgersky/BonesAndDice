@@ -28,17 +28,24 @@ public class Hand {
 
     public void selectDice(int i) {
         dices.get(i).markSelected();
+        moveToSelected();
+    }
+
+    public void unselectDice(int i) {
+        dices.get(i).markUnselected();
+        removeFromSelectd();
     }
 
     public void moveToSelected() {
         Iterator<Dice> it = dices.iterator();
-        if (goodToMove()) {
-            while (it.hasNext()) {
-                if (it.next().selected) {
-                    selectedDices.add(it.next());
-                    it.remove();
-                }
+        while (it.hasNext()) {
+            if (it.next().selected) {
+                selectedDices.add(it.next());
             }
         }
+    }
+
+    public void removeFromSelectd() {
+        selectedDices.removeIf(dice -> !dice.selected);
     }
 }
