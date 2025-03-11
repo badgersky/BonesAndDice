@@ -1,6 +1,7 @@
 package io.github.badgersky.BonesAndDice;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Hand {
 
@@ -27,5 +28,17 @@ public class Hand {
 
     public void selectDice(int i) {
         dices.get(i).markSelected();
+    }
+
+    public void moveToSelected() {
+        Iterator<Dice> it = dices.iterator();
+        if (goodToMove()) {
+            while (it.hasNext()) {
+                if (it.next().selected) {
+                    selectedDices.add(it.next());
+                    it.remove();
+                }
+            }
+        }
     }
 }
