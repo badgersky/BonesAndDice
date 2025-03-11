@@ -18,4 +18,14 @@ public class Hand {
             }
         }
     }
+
+    public void rollNand() {
+        for (Dice dice : dices) {
+            dice.rollDice();
+        }
+    }
+
+    public void selectDice(int i) {
+        dices.get(i).markSelected();
+    }
 }

@@ -7,10 +7,10 @@ public class Dice {
     private int value;
 
     public Dice() {
-        roll_dice();
+        rollDice();
     }
 
-    private void roll_dice() {
+    public void rollDice() {
         value = new Random().nextInt(6) + 1;
     }
 
