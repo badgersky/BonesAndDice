@@ -54,7 +54,7 @@ public class Hand {
     public boolean has26(ArrayList<Integer> numbers) {
         boolean res = true;
 
-        for (int i = 1; i <= 6; i++) {
+        for (int i = 2; i <= 6; i++) {
             if (!numbers.contains(i)) {
                 res = false;
                 return res;
@@ -110,5 +110,60 @@ public class Hand {
 
     public void unselectDice(int i) {
         dices.get(i).markUnselected();
+    }
+
+    public int countPoints() {
+        ArrayList<Integer> selectedPoints = new ArrayList<>();
+        int points = 0;
+        int occurrences;
+
+        for (Dice d : dices) {
+            selectedPoints.add(d.getValue());
+        }
+
+        if (has16(selectedPoints)) {
+            points = 1500;
+            return points;
+        }
+        if (has15(selectedPoints)) {
+            points = 500;
+            if (countOccurrences(1, selectedPoints) == 2) {
+                points += 100;
+            }
+            if (countOccurrences(5, selectedPoints) == 2) {
+                points += 50;
+            }
+            return points;
+        }
+        if (has26(selectedPoints)) {
+            points = 750;
+            if (countOccurrences(5, selectedPoints) == 2) {
+                points += 50;
+            }
+            return points;
+        }
+
+        for (int i = 1; i <= 6; i++) {
+            occurrences = countOccurrences(i, selectedPoints);
+            if (i != 1 && i != 5) {
+                if (occurrences >= 3) {
+                    points += (i * 100) * (occurrences - 2);
+                }
+            } else if (i == 1) {
+                if (occurrences >= 3) {
+                    points += (i * 1000) * (occurrences - 2);
+                } else {
+                    points += 100 * occurrences;
+                }
+            } else {
+                if (occurrences >= 3) {
+                    points += (i * 100) * (occurrences - 2);
+                } else {
+                    points += 50 * occurrences;
+                }
+            }
+        }
+
+        return points;
     }
 }
