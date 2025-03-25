@@ -98,7 +98,7 @@ public class Hand {
         return res;
     }
 
-    public void rollNand() {
+    public void rollHand() {
         for (Dice dice : dices) {
             dice.rollDice();
         }
@@ -148,6 +148,8 @@ public class Hand {
             if (i != 1 && i != 5) {
                 if (occurrences >= 3) {
                     points += (i * 100) * (occurrences - 2);
+                } else {
+                    return 0;
                 }
             } else if (i == 1) {
                 if (occurrences >= 3) {
