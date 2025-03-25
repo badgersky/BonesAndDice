@@ -118,7 +118,9 @@ public class Hand {
         int occurrences;
 
         for (Dice d : dices) {
-            selectedPoints.add(d.getValue());
+            if (d.selected) {
+                selectedPoints.add(d.getValue());
+            }
         }
 
         if (has16(selectedPoints)) {
@@ -145,23 +147,25 @@ public class Hand {
 
         for (int i = 1; i <= 6; i++) {
             occurrences = countOccurrences(i, selectedPoints);
-            if (i != 1 && i != 5) {
-                if (occurrences >= 3) {
-                    points += (i * 100) * (occurrences - 2);
+            if (occurrences > 0) {
+                if (i == 1) {
+                    if (occurrences >= 3) {
+                        points += 1000 * (occurrences - 2);
+                    } else {
+                        points += 100 * occurrences;
+                    }
+                } else if (i == 5) {
+                    if (occurrences >= 3) {
+                        points += 500 * (occurrences - 2);
+                    } else {
+                        points += 50 * occurrences;
+                    }
                 } else {
-                    return 0;
-                }
-            } else if (i == 1) {
-                if (occurrences >= 3) {
-                    points += (i * 1000) * (occurrences - 2);
-                } else {
-                    points += 100 * occurrences;
-                }
-            } else {
-                if (occurrences >= 3) {
-                    points += (i * 100) * (occurrences - 2);
-                } else {
-                    points += 50 * occurrences;
+                    if (occurrences >= 3) {
+                        points += (i * 100) * (occurrences - 2);
+                    } else {
+                        points = 0;
+                    }
                 }
             }
         }
