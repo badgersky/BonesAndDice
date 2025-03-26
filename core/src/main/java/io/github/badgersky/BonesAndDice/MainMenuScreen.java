@@ -20,6 +20,18 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        draw();
+        input();
+    }
+
+    private void input() {
+        if (Gdx.input.isTouched()) {
+            game.setScreen(new GameScreen(game));
+            dispose();
+        }
+    }
+
+    private void draw() {
         ScreenUtils.clear(Color.BLACK);
 
         game.viewport.apply();
@@ -28,11 +40,6 @@ public class MainMenuScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
         game.batch.end();
-
-        if (Gdx.input.isTouched()) {
-            game.setScreen(new GameScreen(game));
-            dispose();
-        }
     }
 
     @Override
