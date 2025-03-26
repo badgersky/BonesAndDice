@@ -5,13 +5,23 @@ import java.util.Random;
 public class Dice {
 
     private int value;
+    public boolean selected;
 
     public Dice() {
-        roll_dice();
+        selected = false;
+        rollDice();
     }
 
-    private void roll_dice() {
+    public void rollDice() {
         value = new Random().nextInt(6) + 1;
+    }
+
+    public void markSelected() {
+        selected = true;
+    }
+
+    public void markUnselected() {
+        selected = false;
     }
 
     public int getValue() {
