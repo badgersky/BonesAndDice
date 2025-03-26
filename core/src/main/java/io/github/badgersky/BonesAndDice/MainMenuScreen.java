@@ -1,6 +1,7 @@
 package io.github.badgersky.BonesAndDice;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -9,8 +10,12 @@ public class MainMenuScreen implements Screen {
 
     final Main game;
 
+    Texture background;
+
     public MainMenuScreen(final Main game) {
         this.game = game;
+
+        this.background = new Texture("menu_background.png");
     }
 
     @Override
@@ -21,8 +26,7 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
         game.batch.begin();
-        game.font.draw(game.batch, "Welcome to BonesAndDice!!!", 4, 4.5f);
-        game.font.draw(game.batch, "Tap Anywhere to Start!", 4, 4);
+        game.batch.draw(background, 0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
         game.batch.end();
 
         if (Gdx.input.isTouched()) {
