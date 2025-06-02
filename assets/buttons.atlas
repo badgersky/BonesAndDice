@@ -1,0 +1,11 @@
+buttons.png
+size:2048,256
+repeat:none
+playbtn
+bounds:776,2,256,128
+playbtn_hover
+bounds:518,2,256,128
+quitbtn
+bounds:2,2,256,128
+quitbtn_hover
+bounds:260,2,256,128

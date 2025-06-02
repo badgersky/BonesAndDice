@@ -2,6 +2,13 @@ package io.github.badgersky.BonesAndDice;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -9,29 +16,70 @@ import com.badlogic.gdx.graphics.Color;
 public class MainMenuScreen implements Screen {
 
     final Main game;
-
     Texture background;
+    private Stage stage;
+    private final TextureAtlas buttonAtlas;
 
     public MainMenuScreen(final Main game) {
         this.game = game;
-
         this.background = new Texture("menu_background.png");
+
+        stage = new Stage(game.viewport, game.batch);
+        Gdx.input.setInputProcessor(stage);
+
+        buttonAtlas = new TextureAtlas(Gdx.files.internal("buttons.atlas"));
+
+        ImageButton.ImageButtonStyle playBtnStyle = new ImageButton.ImageButtonStyle();
+        playBtnStyle.up = new TextureRegionDrawable(buttonAtlas.findRegion("playbtn"));
+        playBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("playbtn_hover"));
+
+        ImageButton.ImageButtonStyle quitBtnStyle = new ImageButton.ImageButtonStyle();
+        quitBtnStyle.up = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn"));
+        quitBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn_hover"));
+
+        ImageButton playBtn = new ImageButton(playBtnStyle);
+        ImageButton quitBtn = new ImageButton(quitBtnStyle);
+
+        System.out.println(buttonAtlas.getRegions().size);
+
+        playBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new GameScreen(game));
+                dispose();
+            }
+        });
+
+        quitBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+
+        Table table = new Table();
+        table.setFillParent(true);
+        table.center();
+
+        table.add(playBtn).size(2f, 1f).row();
+        table.add(quitBtn).size(2f, 1f).row();
+
+        table.padBottom(2f);
+
+        stage.addActor(table);
     }
 
     @Override
     public void render(float delta) {
-        draw();
+        draw(delta);
         input();
     }
 
     private void input() {
-        if (Gdx.input.isTouched()) {
-            game.setScreen(new GameScreen(game));
-            dispose();
-        }
+
     }
 
-    private void draw() {
+    private void draw(float delta) {
         ScreenUtils.clear(Color.BLACK);
 
         game.viewport.apply();
@@ -40,11 +88,15 @@ public class MainMenuScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
         game.batch.end();
+
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
         game.viewport.update(width, height, true);
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -69,6 +121,8 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        background.dispose();
+        stage.dispose();
+        buttonAtlas.dispose();
     }
 }
