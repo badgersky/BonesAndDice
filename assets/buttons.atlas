@@ -2,10 +2,14 @@ buttons.png
 size:2048,256
 repeat:none
 playbtn
+bounds:1292,2,256,128
+playbtn_click
 bounds:776,2,256,128
 playbtn_hover
-bounds:518,2,256,128
+bounds:1034,2,256,128
 quitbtn
 bounds:2,2,256,128
-quitbtn_hover
+quitbtn_click
 bounds:260,2,256,128
+quitbtn_hover
+bounds:518,2,256,128

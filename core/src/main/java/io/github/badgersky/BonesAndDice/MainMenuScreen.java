@@ -32,10 +32,12 @@ public class MainMenuScreen implements Screen {
         ImageButton.ImageButtonStyle playBtnStyle = new ImageButton.ImageButtonStyle();
         playBtnStyle.up = new TextureRegionDrawable(buttonAtlas.findRegion("playbtn"));
         playBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("playbtn_hover"));
+        playBtnStyle.down = new TextureRegionDrawable(buttonAtlas.findRegion("playbtn_click"));
 
         ImageButton.ImageButtonStyle quitBtnStyle = new ImageButton.ImageButtonStyle();
         quitBtnStyle.up = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn"));
         quitBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn_hover"));
+        quitBtnStyle.down = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn_click"));
 
         ImageButton playBtn = new ImageButton(playBtnStyle);
         ImageButton quitBtn = new ImageButton(quitBtnStyle);
