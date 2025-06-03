@@ -121,6 +121,15 @@ public class Hand {
         }
     }
 
+    public void returnPutAwayDices() {
+        Iterator<Dice> it = putAwayDices.iterator();
+        while (it.hasNext()) {
+            Dice d = it.next();
+            dices.add(d);
+            it.remove();
+        }
+    }
+
     public int countPoints() {
         ArrayList<Integer> selectedPoints = new ArrayList<>();
         int points = 0;

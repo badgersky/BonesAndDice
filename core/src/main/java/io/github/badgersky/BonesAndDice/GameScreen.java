@@ -18,11 +18,11 @@ public class GameScreen implements Screen {
     private Hand hand1;
     private Hand hand2;
     private int diceIndex;
-    private TextureAtlas diceAtlas;
-    private HashMap<String, TextureRegion> diceRegions;
-    private TextureRegion hoverRegion;
-    private TextureRegion chosenRegion;
-    private TextureRegion hoverChosenRegion;
+    private final TextureAtlas diceAtlas;
+    private final HashMap<String, TextureRegion> diceRegions;
+    private final TextureRegion hoverRegion;
+    private final TextureRegion chosenRegion;
+    private final TextureRegion hoverChosenRegion;
     private int roundPoints1;
     private int selectedPoints1;
     private int totalPoints1;
@@ -137,9 +137,14 @@ public class GameScreen implements Screen {
                 hand1.putAwaySelectedDices();
                 roundPoints1 += selectedPoints1;
                 selectedPoints1 = 0;
-                hand1.rollHand();
                 diceIndex = 0;
             }
+
+            if (hand1.dices.isEmpty()) {
+                hand1.returnPutAwayDices();
+            }
+
+            hand1.rollHand();
         }
     }
 
