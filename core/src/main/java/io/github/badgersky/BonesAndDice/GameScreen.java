@@ -1,5 +1,7 @@
 package io.github.badgersky.BonesAndDice;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -30,9 +32,16 @@ public class GameScreen implements Screen {
         game.batch.end();
     }
 
+    private void input() {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            pause();
+        }
+    }
+
     @Override
     public void render(float v) {
         draw();
+        input();
     }
 
     @Override
@@ -47,7 +56,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-
+        PauseScreen pauseScreen = new PauseScreen(game, this);
+        game.setScreen(pauseScreen);
     }
 
     @Override

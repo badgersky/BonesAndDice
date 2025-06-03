@@ -2,6 +2,7 @@ package io.github.badgersky.BonesAndDice;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 public class PauseScreen implements Screen {
 
@@ -45,8 +47,7 @@ public class PauseScreen implements Screen {
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(gameScreen);
-                dispose();
+                resume();
             }
         });
 
@@ -76,11 +77,21 @@ public class PauseScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
+        draw(delta);
     }
 
     private void draw(float delta) {
-        
+        ScreenUtils.clear(Color.BLACK);
+
+        game.viewport.apply();
+        game.batch.setProjectionMatrix(stage.getCamera().combined);
+
+        game.batch.begin();
+        game.batch.draw(background, 0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
+        game.batch.end();
+
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
@@ -95,7 +106,8 @@ public class PauseScreen implements Screen {
 
     @Override
     public void resume() {
-
+        game.setScreen(gameScreen);
+        dispose();
     }
 
     @Override
