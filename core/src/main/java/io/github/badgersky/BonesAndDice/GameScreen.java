@@ -6,14 +6,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
-    final Main game;
 
+    final Main game;
     Texture background;
 
     public GameScreen(final Main game) {
         this.game = game;
 
-        background = new Texture("background_game.png");
+        background = new Texture("game_background.png");
     }
 
     private void draw() {

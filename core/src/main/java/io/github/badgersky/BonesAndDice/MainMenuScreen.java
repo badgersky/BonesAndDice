@@ -22,7 +22,7 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(final Main game) {
         this.game = game;
-        this.background = new Texture("menu_background.png");
+        background = new Texture("menu_background.png");
 
         stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
@@ -74,11 +74,6 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         draw(delta);
-        input();
-    }
-
-    private void input() {
-
     }
 
     private void draw(float delta) {
