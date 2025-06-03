@@ -111,14 +111,12 @@ public class Hand {
 
     public void putAwaySelectedDices() {
         Iterator<Dice> it = dices.iterator();
-        if (countPoints() > 0) {
-            while (it.hasNext()) {
-                Dice d = it.next();
-                if (d.selected) {
-                    d.markUnselected();
-                    putAwayDices.add(d);
-                    it.remove();
-                }
+        while (it.hasNext()) {
+            Dice d = it.next();
+            if (d.selected) {
+                d.markUnselected();
+                putAwayDices.add(d);
+                it.remove();
             }
         }
     }

@@ -133,11 +133,13 @@ public class GameScreen implements Screen {
             selectedPoints1 += hand1.countPoints();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            hand1.putAwaySelectedDices();
-            roundPoints1 += selectedPoints1;
-            selectedPoints1 = 0;
-            hand1.rollHand();
-            diceIndex = 0;
+            if (hand1.countPoints() > 0) {
+                hand1.putAwaySelectedDices();
+                roundPoints1 += selectedPoints1;
+                selectedPoints1 = 0;
+                hand1.rollHand();
+                diceIndex = 0;
+            }
         }
     }
 
