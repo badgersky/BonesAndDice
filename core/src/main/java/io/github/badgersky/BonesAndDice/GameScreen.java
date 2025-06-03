@@ -33,7 +33,7 @@ public class GameScreen implements Screen {
     }
 
     private void input() {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             pause();
         }
     }

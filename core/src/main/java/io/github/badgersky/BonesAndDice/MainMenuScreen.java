@@ -42,8 +42,6 @@ public class MainMenuScreen implements Screen {
         ImageButton playBtn = new ImageButton(playBtnStyle);
         ImageButton quitBtn = new ImageButton(quitBtnStyle);
 
-        System.out.println(buttonAtlas.getRegions().size);
-
         playBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
