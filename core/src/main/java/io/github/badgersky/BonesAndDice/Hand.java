@@ -1,16 +1,13 @@
 package io.github.badgersky.BonesAndDice;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 public class Hand {
 
     public ArrayList<Dice> dices;
-    public ArrayList<Dice> selectedDices;
+    public ArrayList<Dice> putAwayDices;
     public Hand() {
-        selectedDices = new ArrayList<>();
+        putAwayDices = new ArrayList<>();
         dices = new ArrayList<>();
         Dice newDice;
 
@@ -110,6 +107,20 @@ public class Hand {
 
     public void unselectDice(int i) {
         dices.get(i).markUnselected();
+    }
+
+    public void putAwaySelectedDices() {
+        Iterator<Dice> it = dices.iterator();
+        if (countPoints() > 0) {
+            while (it.hasNext()) {
+                Dice d = it.next();
+                if (d.selected) {
+                    d.markUnselected();
+                    putAwayDices.add(d);
+                    it.remove();
+                }
+            }
+        }
     }
 
     public int countPoints() {

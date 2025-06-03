@@ -51,12 +51,12 @@ public class GameScreen implements Screen {
     }
 
     private void drawPoints() {
-        float x = game.viewport.getWorldWidth() - 1;
+        float x = game.viewport.getWorldWidth() - 1.6f;
         float y = 2;
 
         game.font.draw(game.batch, "Selected: " + selectedPoints1, x, y);
-        game.font.draw(game.batch, "Round: " + roundPoints1, x, y - 0.5f);
-        game.font.draw(game.batch, "Total: " + totalPoints1, x, y - 1f);
+        game.font.draw(game.batch, "Round: " + roundPoints1, x, y - 0.4f);
+        game.font.draw(game.batch, "Total: " + totalPoints1, x, y - 0.8f);
     }
 
     private void drawDices() {
@@ -69,7 +69,7 @@ public class GameScreen implements Screen {
             String key = "dice" + dice.getValue();
 
             TextureRegion region = diceRegions.get(key);
-            float x = 2 + i * totalSize;
+            float x = 1.8f + i * totalSize;
             float y = 1;
             if (i == diceIndex && dice.selected) {
                 game.batch.draw(hoverChosenRegion, x, y, diceSize, diceSize);
@@ -78,6 +78,17 @@ public class GameScreen implements Screen {
             } else if (dice.selected) {
                 game.batch.draw(chosenRegion, x, y, diceSize, diceSize);
             }
+
+            game.batch.draw(region, x, y, diceSize, diceSize);
+        }
+
+        for (int i = 0; i < hand1.putAwayDices.size(); i++) {
+            Dice dice = hand1.putAwayDices.get(i);
+            String key = "dice" + dice.getValue();
+
+            TextureRegion region = diceRegions.get(key);
+            float y = 0.5f + i * diceSize;
+            float x = 9;
 
             game.batch.draw(region, x, y, diceSize, diceSize);
         }
@@ -119,8 +130,14 @@ public class GameScreen implements Screen {
             } else {
                 hand1.selectDice(diceIndex);
             }
-
             selectedPoints1 += hand1.countPoints();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            hand1.putAwaySelectedDices();
+            roundPoints1 += selectedPoints1;
+            selectedPoints1 = 0;
+            hand1.rollHand();
+            diceIndex = 0;
         }
     }
 
