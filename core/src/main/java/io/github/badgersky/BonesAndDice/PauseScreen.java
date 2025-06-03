@@ -1,6 +1,7 @@
 package io.github.badgersky.BonesAndDice;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -78,6 +79,13 @@ public class PauseScreen implements Screen {
     @Override
     public void render(float delta) {
         draw(delta);
+        input();
+    }
+
+    private void input() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            resume();
+        }
     }
 
     private void draw(float delta) {
