@@ -165,6 +165,7 @@ public class Hand {
                         points += (i * 100) * (occurrences - 2);
                     } else {
                         points = 0;
+                        return points;
                     }
                 }
             }

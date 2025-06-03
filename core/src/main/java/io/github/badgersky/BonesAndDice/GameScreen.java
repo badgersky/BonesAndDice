@@ -23,6 +23,9 @@ public class GameScreen implements Screen {
     private TextureRegion hoverRegion;
     private TextureRegion chosenRegion;
     private TextureRegion hoverChosenRegion;
+    private int roundPoints1;
+    private int selectedPoints1;
+    private int totalPoints1;
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -41,6 +44,19 @@ public class GameScreen implements Screen {
         hand1 = new Hand();
         hand2 = new Hand();
         diceIndex = 0;
+
+        roundPoints1 = 0;
+        selectedPoints1 = 0;
+        totalPoints1 = 0;
+    }
+
+    private void drawPoints() {
+        float x = game.viewport.getWorldWidth() - 1;
+        float y = 2;
+
+        game.font.draw(game.batch, "Selected: " + selectedPoints1, x, y);
+        game.font.draw(game.batch, "Round: " + roundPoints1, x, y - 0.5f);
+        game.font.draw(game.batch, "Total: " + totalPoints1, x, y - 1f);
     }
 
     private void drawDices() {
@@ -74,6 +90,7 @@ public class GameScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
         drawDices();
+        drawPoints();
         game.batch.end();
     }
 
@@ -96,11 +113,14 @@ public class GameScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            selectedPoints1 = 0;
             if (hand1.dices.get(diceIndex).selected) {
                 hand1.unselectDice(diceIndex);
             } else {
                 hand1.selectDice(diceIndex);
             }
+
+            selectedPoints1 += hand1.countPoints();
         }
     }
 
