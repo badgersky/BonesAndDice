@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.sun.tools.javac.comp.Todo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameScreen implements Screen {
@@ -84,7 +85,10 @@ public class GameScreen implements Screen {
 
             game.batch.draw(region, x, y, diceSize, diceSize);
         }
+    }
 
+    private void drawPutAwayDices(Hand hand) {
+        float diceSize = 1;
         for (int i = 0; i < hand1.putAwayDices.size(); i++) {
             Dice dice = hand1.putAwayDices.get(i);
             String key = "dice" + dice.getValue();
@@ -104,6 +108,7 @@ public class GameScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
         drawDices();
+        drawPutAwayDices(hand1);
         drawPoints();
         game.batch.end();
     }
