@@ -2,6 +2,7 @@ package io.github.badgersky.BonesAndDice;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -19,7 +20,8 @@ public class Main extends Game {
         viewport = new StretchViewport(12, 7.5f);
 
         font.setUseIntegerPositions(false);
-        font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight());
+        font.getData().setScale(0.014f);
+        font.setColor(Color.WHITE);
 
         this.setScreen(new MainMenuScreen(this));
     }
