@@ -54,6 +54,9 @@ public class PauseScreen implements Screen {
         menuBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                long id = game.btnSound.play(1f);
+                game.btnSound.setPitch(id, 0.8f);
+                game.btnSound.setVolume(id, 0.2f);
                 game.setScreen(new MainMenuScreen(game));
                 gameScreen.dispose();
                 dispose();
@@ -63,6 +66,9 @@ public class PauseScreen implements Screen {
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                long id = game.btnSound.play(1f);
+                game.btnSound.setPitch(id, 0.8f);
+                game.btnSound.setVolume(id, 0.2f);
                 resume();
             }
         });
@@ -70,6 +76,9 @@ public class PauseScreen implements Screen {
         quitBtn.addListener(new ClickListener() {
            @Override
            public void clicked(InputEvent event, float x, float y) {
+               long id = game.btnSound.play(1f);
+               game.btnSound.setPitch(id, 0.8f);
+               game.btnSound.setVolume(id, 0.2f);
                Gdx.app.exit();
            }
         });
