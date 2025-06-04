@@ -42,8 +42,23 @@ public class PauseScreen implements Screen {
         quitBtnStyle.down = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn_click"));
         quitBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn_hover"));
 
+        ImageButton.ImageButtonStyle menuBtnStyle = new ImageButton.ImageButtonStyle();
+        menuBtnStyle.up = new TextureRegionDrawable(buttonAtlas.findRegion("menubtn"));
+        menuBtnStyle.down = new TextureRegionDrawable(buttonAtlas.findRegion("menubtn_click"));
+        menuBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("menubtn_hover"));
+
         ImageButton backBtn = new ImageButton(backBtnStyle);
         ImageButton quitBtn = new ImageButton(quitBtnStyle);
+        ImageButton menuBtn = new ImageButton(menuBtnStyle);
+
+        menuBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MainMenuScreen(game));
+                gameScreen.dispose();
+                dispose();
+            }
+        });
 
         backBtn.addListener(new ClickListener() {
             @Override
@@ -64,9 +79,10 @@ public class PauseScreen implements Screen {
         table.center();
 
         table.add(backBtn).size(2f, 1f).row();
+        table.add(menuBtn).size(2f, 1f).row();
         table.add(quitBtn).size(2f, 1f).row();
 
-        table.padBottom(2f);
+        table.padBottom(1f);
 
         stage.addActor(table);
     }
@@ -104,7 +120,7 @@ public class PauseScreen implements Screen {
 
     @Override
     public void resize(int i, int i1) {
-
+        game.viewport.update(i, i1, true);
     }
 
     @Override
