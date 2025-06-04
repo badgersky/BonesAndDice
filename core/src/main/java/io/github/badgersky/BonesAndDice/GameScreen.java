@@ -21,10 +21,16 @@ public class GameScreen implements Screen {
     private Hand hand2;
     private int diceIndex;
     private final TextureAtlas diceAtlas;
+    private final TextureAtlas msgAtlas;
     private final HashMap<String, TextureRegion> diceRegions;
     private final TextureRegion hoverRegion;
     private final TextureRegion chosenRegion;
     private final TextureRegion hoverChosenRegion;
+    private final TextureRegion msgFail;
+    private final TextureRegion msgWin;
+    private final TextureRegion msgLose;
+    private float msgTimer;
+    private TextureRegion currMsg;
     private int roundPoints1;
     private int selectedPoints1;
     private int totalPoints1;
@@ -34,6 +40,7 @@ public class GameScreen implements Screen {
 
         background = new Texture("game_background.png");
         diceAtlas = new TextureAtlas(Gdx.files.internal("dices.atlas"));
+        msgAtlas = new TextureAtlas(Gdx.files.internal("messages.atlas"));
 
         diceRegions = new HashMap<>();
         for (int i = 1; i <= 6; i++) {
@@ -42,6 +49,12 @@ public class GameScreen implements Screen {
         hoverRegion = new TextureRegion(diceAtlas.findRegion("hover"));
         chosenRegion = new TextureRegion(diceAtlas.findRegion("chosen"));
         hoverChosenRegion = new TextureRegion(diceAtlas.findRegion("chosenhover"));
+
+        msgFail = new TextureRegion(msgAtlas.findRegion("fail"));
+        msgLose = new TextureRegion(msgAtlas.findRegion("lose"));
+        msgWin = new TextureRegion(msgAtlas.findRegion("win"));
+        currMsg = null;
+        msgTimer = 0f;
 
         hand1 = new Hand();
         hand2 = new Hand();
@@ -109,8 +122,24 @@ public class GameScreen implements Screen {
         game.batch.draw(background, 0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
         drawDices();
         drawPutAwayDices(hand1);
+        drawMsg();
         drawPoints();
         game.batch.end();
+    }
+
+    private void drawMsg() {
+        float centerX = game.viewport.getWorldWidth() / 2f;
+        float centerY = game.viewport.getWorldHeight() / 2f;
+
+        float msgWidth = 4f;
+        float msgHeight = 2f;
+
+        float drawX = centerX - msgWidth / 2f;
+        float drawY = centerY - msgHeight / 2f;
+
+        if (currMsg != null) {
+            game.batch.draw(currMsg, drawX, drawY, msgWidth, msgHeight);
+        }
     }
 
     private void input() {
@@ -172,23 +201,29 @@ public class GameScreen implements Screen {
         if (!fail) {
             totalPoints1 += roundPoints1 + selectedPoints1;
         } else {
-            System.out.println("FAIL!!! You lose all points in this round!!!");
+            currMsg = msgFail;
+            msgTimer = 2f;
         }
 
         roundPoints1 = 0;
         selectedPoints1 = 0;
         hand1.returnPutAwayDices();
         diceIndex = 0;
-        hand1.rollHand();
         hand1.resetSelection();
-
-        // TODO: computers round
     }
 
     @Override
-    public void render(float v) {
-        draw();
+    public void render(float delta) {
         input();
+
+        if (msgTimer > 0) {
+            msgTimer -= delta;
+            if (msgTimer <= 0) {
+                currMsg = null;
+            }
+        }
+
+        draw();
     }
 
     @Override
