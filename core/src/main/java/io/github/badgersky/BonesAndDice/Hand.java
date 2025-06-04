@@ -6,6 +6,7 @@ public class Hand {
 
     public ArrayList<Dice> dices;
     public ArrayList<Dice> putAwayDices;
+
     public Hand() {
         putAwayDices = new ArrayList<>();
         dices = new ArrayList<>();

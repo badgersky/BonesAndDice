@@ -34,6 +34,7 @@ public class GameScreen implements Screen {
     private int roundPoints1;
     private int selectedPoints1;
     private int totalPoints1;
+    private boolean playerTurn;
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -63,6 +64,8 @@ public class GameScreen implements Screen {
         roundPoints1 = 0;
         selectedPoints1 = 0;
         totalPoints1 = 0;
+
+        playerTurn = true;
 
         rollAndCheck(hand1);
     }
@@ -100,7 +103,7 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void drawPutAwayDices(Hand hand) {
+    private void drawPutAwayDices() {
         float diceSize = 1;
         for (int i = 0; i < hand1.putAwayDices.size(); i++) {
             Dice dice = hand1.putAwayDices.get(i);
@@ -121,7 +124,7 @@ public class GameScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
         drawDices();
-        drawPutAwayDices(hand1);
+        drawPutAwayDices();
         drawMsg();
         drawPoints();
         game.batch.end();
@@ -146,46 +149,48 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             pause();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            if (diceIndex == hand1.dices.size() - 1) {
-                diceIndex = 0;
-            } else {
-                diceIndex += 1;
-            }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            if (diceIndex == 0) {
-                diceIndex = hand1.dices.size() - 1;
-            } else {
-                diceIndex -= 1;
-            }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            selectedPoints1 = 0;
-            if (hand1.dices.get(diceIndex).selected) {
-                hand1.unselectDice(diceIndex);
-            } else {
-                hand1.selectDice(diceIndex);
-            }
-            selectedPoints1 += hand1.countPoints();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            if (hand1.countPoints() > 0) {
-                hand1.putAwaySelectedDices();
-                roundPoints1 += selectedPoints1;
-                selectedPoints1 = 0;
-                diceIndex = 0;
-
-                if (hand1.dices.isEmpty()) {
-                    hand1.returnPutAwayDices();
+        if (playerTurn) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                if (diceIndex == hand1.dices.size() - 1) {
+                    diceIndex = 0;
+                } else {
+                    diceIndex += 1;
                 }
-
-                rollAndCheck(hand1);
             }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            if (hand1.countPoints() > 0) {
-                endRound(false);
+            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                if (diceIndex == 0) {
+                    diceIndex = hand1.dices.size() - 1;
+                } else {
+                    diceIndex -= 1;
+                }
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                selectedPoints1 = 0;
+                if (hand1.dices.get(diceIndex).selected) {
+                    hand1.unselectDice(diceIndex);
+                } else {
+                    hand1.selectDice(diceIndex);
+                }
+                selectedPoints1 += hand1.countPoints();
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+                if (hand1.countPoints() > 0) {
+                    hand1.putAwaySelectedDices();
+                    roundPoints1 += selectedPoints1;
+                    selectedPoints1 = 0;
+                    diceIndex = 0;
+
+                    if (hand1.dices.isEmpty()) {
+                        hand1.returnPutAwayDices();
+                    }
+
+                    rollAndCheck(hand1);
+                }
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+                if (hand1.countPoints() > 0) {
+                    endRound(false);
+                }
             }
         }
     }
@@ -210,6 +215,7 @@ public class GameScreen implements Screen {
         hand1.returnPutAwayDices();
         diceIndex = 0;
         hand1.resetSelection();
+        playerTurn = false;
     }
 
     @Override
