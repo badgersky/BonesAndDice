@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.sun.tools.javac.comp.Todo;
 
 import java.util.HashMap;
 
@@ -48,6 +49,8 @@ public class GameScreen implements Screen {
         roundPoints1 = 0;
         selectedPoints1 = 0;
         totalPoints1 = 0;
+
+        rollAndCheck(hand1);
     }
 
     private void drawPoints() {
@@ -138,14 +141,43 @@ public class GameScreen implements Screen {
                 roundPoints1 += selectedPoints1;
                 selectedPoints1 = 0;
                 diceIndex = 0;
-            }
 
-            if (hand1.dices.isEmpty()) {
-                hand1.returnPutAwayDices();
-            }
+                if (hand1.dices.isEmpty()) {
+                    hand1.returnPutAwayDices();
+                }
 
-            hand1.rollHand();
+                rollAndCheck(hand1);
+            }
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            if (hand1.countPoints() > 0) {
+                endRound(false);
+            }
+        }
+    }
+
+    private void rollAndCheck(Hand hand) {
+        hand.rollHand();
+        if (hand.hasNoPoints()) {
+            endRound(true);
+        }
+    }
+
+    public void endRound(boolean fail) {
+        if (!fail) {
+            totalPoints1 += roundPoints1 + selectedPoints1;
+        } else {
+            System.out.println("FAIL!!! You lose all points in this round!!!");
+        }
+
+        roundPoints1 = 0;
+        selectedPoints1 = 0;
+        hand1.returnPutAwayDices();
+        diceIndex = 0;
+        hand1.rollHand();
+        hand1.resetSelection();
+
+        // TODO: computers round
     }
 
     @Override

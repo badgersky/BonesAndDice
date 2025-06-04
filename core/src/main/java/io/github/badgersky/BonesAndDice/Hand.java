@@ -109,6 +109,12 @@ public class Hand {
         dices.get(i).markUnselected();
     }
 
+    public void resetSelection() {
+        for (Dice d : dices) {
+            d.markUnselected();
+        }
+    }
+
     public void putAwaySelectedDices() {
         Iterator<Dice> it = dices.iterator();
         while (it.hasNext()) {
