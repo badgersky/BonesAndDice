@@ -49,7 +49,7 @@ public class MainMenuScreen implements Screen {
 //                long id = game.btnSound.play(1f);
 //                game.btnSound.setPitch(id, 0.8f);
 //                game.btnSound.setVolume(id, 0.2f);
-//                game.setScreen(new GameScreen(game));
+                game.setScreen(new GameScreen(game));
                 dispose();
             }
         });
