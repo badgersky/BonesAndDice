@@ -85,7 +85,7 @@ public class GameScreen implements Screen {
         playerTurn = true;
         shouldRollAtStart = true;
 
-        winningPoints = 100;
+        winningPoints = 5000;
     }
 
     private void pcTurn(float delta) {
