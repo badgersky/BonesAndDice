@@ -48,7 +48,7 @@ public class PcPlayerTest {
         hand.dices.get(4).setValue(4);
         hand.dices.get(5).setValue(4);
 
-        bestCombo = player.chooseBestCombo();
+        bestCombo = player.chooseBestCombo(0, 1000);
 
         assertEquals(3, bestCombo.size());
         assertEquals(2, bestCombo.get(0).getValue());
@@ -69,7 +69,7 @@ public class PcPlayerTest {
         hand.dices.get(4).setValue(4);
         hand.dices.get(5).setValue(4);
 
-        bestCombo = player.chooseBestCombo();
+        bestCombo = player.chooseBestCombo(0, 1000);
 
         assertEquals(1, bestCombo.size());
         assertEquals(1, bestCombo.get(0).getValue());
@@ -88,7 +88,7 @@ public class PcPlayerTest {
         hand.dices.get(4).setValue(1);
         hand.dices.get(5).setValue(1);
 
-        bestCombo = player.chooseBestCombo();
+        bestCombo = player.chooseBestCombo(0, 10000);
 
         assertEquals(6, bestCombo.size());
         assertEquals(1, bestCombo.get(0).getValue());
@@ -108,7 +108,7 @@ public class PcPlayerTest {
         hand.dices.get(4).setValue(5);
         hand.dices.get(5).setValue(6);
 
-        bestCombo = player.chooseBestCombo();
+        bestCombo = player.chooseBestCombo(0, 10000);
 
         assertEquals(6, bestCombo.size());
         assertEquals(1, bestCombo.get(0).getValue());
@@ -128,9 +128,68 @@ public class PcPlayerTest {
         hand.dices.get(4).setValue(6);
         hand.dices.get(5).setValue(6);
 
-        bestCombo = player.chooseBestCombo();
+        bestCombo = player.chooseBestCombo(0, 1000);
 
         assertEquals(1, bestCombo.size());
         assertEquals(5, bestCombo.get(0).getValue());
+    }
+
+    @Test
+    void testChooseBestCombo6() {
+        Hand hand = new Hand();
+        PcPlayer player = new PcPlayer(hand);
+        List<Dice> bestCombo;
+
+        hand.dices.get(0).setValue(5);
+        hand.dices.get(1).setValue(5);
+        hand.dices.get(2).setValue(3);
+        hand.dices.get(3).setValue(4);
+        hand.dices.get(4).setValue(6);
+        hand.dices.get(5).setValue(6);
+
+        bestCombo = player.chooseBestCombo(0, 1000);
+
+        assertEquals(1, bestCombo.size());
+        assertEquals(5, bestCombo.get(0).getValue());
+    }
+
+    @Test
+    void testChooseBestCombo7() {
+        Hand hand = new Hand();
+        PcPlayer player = new PcPlayer(hand);
+        List<Dice> bestCombo;
+
+        hand.dices.get(0).setValue(5);
+        hand.dices.get(1).setValue(5);
+        hand.dices.get(2).setValue(1);
+        hand.dices.get(3).setValue(4);
+        hand.dices.get(4).setValue(1);
+        hand.dices.get(5).setValue(6);
+
+        bestCombo = player.chooseBestCombo(0, 1000);
+
+        assertEquals(1, bestCombo.size());
+        assertEquals(1, bestCombo.get(0).getValue());
+    }
+
+    @Test
+    void testChooseBestCombo8() {
+        Hand hand = new Hand();
+        PcPlayer player = new PcPlayer(hand);
+        List<Dice> bestCombo;
+
+        hand.dices.get(0).setValue(5);
+        hand.dices.get(1).setValue(5);
+        hand.dices.get(2).setValue(1);
+        hand.dices.get(3).setValue(4);
+        hand.dices.get(4).setValue(3);
+        hand.dices.get(5).setValue(6);
+
+        bestCombo = player.chooseBestCombo(900, 1000);
+
+        assertEquals(3, bestCombo.size());
+        assertEquals(5, bestCombo.get(0).getValue());
+        assertEquals(5, bestCombo.get(1).getValue());
+        assertEquals(1, bestCombo.get(2).getValue());
     }
 }

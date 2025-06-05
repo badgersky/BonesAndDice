@@ -42,6 +42,7 @@ public class GameScreen implements Screen {
     private PcPlayer pcPlayer;
     private float pcTimer;
     private int pcAction;
+    public int winningPoints;
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -82,6 +83,8 @@ public class GameScreen implements Screen {
 
         playerTurn = true;
 
+        winningPoints = 4000;
+
         rollAndCheck(hand1, false);
     }
 
@@ -103,7 +106,8 @@ public class GameScreen implements Screen {
                     break;
                 case 1:
                     System.out.println("PC selecting dices");
-                    selectedPoints2 += pcPlayer.play();
+                    int pointsSoFar = totalPoints2 + selectedPoints2 + roundPoints2;
+                    selectedPoints2 += pcPlayer.play(pointsSoFar, winningPoints);
                     pcAction = 2;
                     break;
                 case 2:
