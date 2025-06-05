@@ -78,6 +78,10 @@ public class PcPlayer {
             }
         }
 
+        if (bestCombo.size() >= hand.dices.size() - 1) {
+            return bestCombo;
+        }
+
         if (pointsSoFar + maxPoints >= winningPoints) {
             return bestCombo;
         } else if (maxPoints <= 300 && bestCombo.size() >= 2) {
