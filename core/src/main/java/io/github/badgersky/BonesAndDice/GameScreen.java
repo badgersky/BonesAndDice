@@ -42,6 +42,8 @@ public class GameScreen implements Screen {
     private PcPlayer pcPlayer;
     private float pcTimer;
     private int pcAction;
+    public int winningPoints;
+    private boolean shouldRollAtStart;
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -81,8 +83,9 @@ public class GameScreen implements Screen {
         totalPoints2 = 0;
 
         playerTurn = true;
+        shouldRollAtStart = true;
 
-        rollAndCheck(hand1, false);
+        winningPoints = 4000;
     }
 
     private void pcTurn(float delta) {
@@ -103,7 +106,8 @@ public class GameScreen implements Screen {
                     break;
                 case 1:
                     System.out.println("PC selecting dices");
-                    selectedPoints2 += pcPlayer.play();
+                    int pointsSoFar = totalPoints2 + selectedPoints2 + roundPoints2;
+                    selectedPoints2 += pcPlayer.play(pointsSoFar, winningPoints);
                     pcAction = 2;
                     break;
                 case 2:
@@ -114,11 +118,8 @@ public class GameScreen implements Screen {
                         }
                     }
 
-                    if (hand2.dices.size() < 2) {endPcRound(false);}
-                    else if (selectNum > hand2.dices.size()) {endPcRound(false);}
-                    else if (selectedPoints2 >= 500 && selectNum != 6) {endPcRound(false);}
-                    else if (roundPoints2 >= 700 && selectNum != 6) {endPcRound(false);}
-                    else if (hand2.putAwayDices.size() >= 4) {endPcRound(false);
+                    if (shouldEndRound(selectNum)) {
+                        endPcRound(false);
                     } else {
                         hand2.putAwaySelectedDices();
                         roundPoints2 += selectedPoints2;
@@ -129,6 +130,25 @@ public class GameScreen implements Screen {
                     break;
             }
         }
+    }
+
+    private boolean shouldEndRound(int selectNum) {
+        int diceLeft = hand2.dices.size() - selectNum;
+        int putAway = hand2.putAwayDices.size();
+        int projectedPoints = totalPoints2 + selectedPoints2 + roundPoints2;
+
+        if (putAway == 6) return false;
+        if ((totalPoints1 - totalPoints2) >= 1500 && (roundPoints2 + selectedPoints2) <= 300 && diceLeft >= 2) return false;
+        if ((totalPoints2 - totalPoints1) >= 1000 && (roundPoints2 + selectedPoints2) >= 400) return true;
+        if (diceLeft == 1 && (roundPoints2 + selectedPoints2) >= 300) return true;
+        if (diceLeft == 2 && (roundPoints2 + selectedPoints2) >= 600) return true;
+        if (diceLeft == 3 && (roundPoints2 + selectedPoints2) >= 800) return true;
+        if (diceLeft == 4 && (roundPoints2 + selectedPoints2) >= 1000) return true;
+        if (diceLeft == 5 && (roundPoints2 + selectedPoints2) >= 1200) return true;
+        if (roundPoints2 >= 500 && putAway >= 4) return true;
+        if (projectedPoints >= winningPoints) return true;
+
+        return false;
     }
 
     private void drawPoints() {
@@ -326,7 +346,8 @@ public class GameScreen implements Screen {
         hand2.returnPutAwayDices();
         hand2.resetSelection();
         playerTurn = true;
-        rollAndCheck(hand1, false);
+        shouldRollAtStart = true;
+        pcAction = 0;
     }
 
     public void endRound(boolean fail) {
@@ -340,14 +361,24 @@ public class GameScreen implements Screen {
         roundPoints1 = 0;
         selectedPoints1 = 0;
         hand1.returnPutAwayDices();
-        diceIndex = 0;
         hand1.resetSelection();
+        diceIndex = 0;
         playerTurn = false;
+        shouldRollAtStart = true;
+        pcAction = 0;
     }
 
     @Override
     public void render(float delta) {
         input();
+
+        if (playerTurn && shouldRollAtStart) {
+            if (hand1.dices.isEmpty()) {
+                hand1.returnPutAwayDices();
+            }
+            rollAndCheck(hand1, false);
+            shouldRollAtStart = false;
+        }
 
         if (!playerTurn) {
             pcTurn(delta);

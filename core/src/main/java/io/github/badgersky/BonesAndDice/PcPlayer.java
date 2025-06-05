@@ -11,10 +11,10 @@ public class PcPlayer {
         this.hand = hand;
     }
 
-    public int play() {
+    public int play(int pointsSoFar, int winningPoints) {
         List<Dice> bestChoice;
 
-        bestChoice = chooseBestCombo();
+        bestChoice = chooseBestCombo(pointsSoFar, winningPoints);
 
         for (Dice d : bestChoice) {
             d.markSelected();
@@ -45,7 +45,7 @@ public class PcPlayer {
         return subsets;
     }
 
-    public List<Dice> chooseBestCombo() {
+    public List<Dice> chooseBestCombo(int pointsSoFar, int winningPoints) {
         List<List<Dice>> subsets = generateSubsets();
         List<List<Dice>> bestCombos = new ArrayList<>();
         List<Dice> bestCombo;
@@ -75,6 +75,29 @@ public class PcPlayer {
         for (List<Dice> combo : bestCombos) {
             if (combo.size() < bestCombo.size()) {
                 bestCombo = combo;
+            }
+        }
+
+        if (bestCombo.size() >= hand.dices.size() - 1) {
+            return bestCombo;
+        }
+
+        if (pointsSoFar + maxPoints >= winningPoints) {
+            return bestCombo;
+        } else if (maxPoints <= 300 && bestCombo.size() >= 2) {
+            List<Dice> safePick = new ArrayList<>();
+            for (Dice d : bestCombo) {
+                if (d.getValue() == 1) {
+                    safePick.add(d);
+                    return safePick;
+                }
+            }
+
+            for (Dice d : bestCombo) {
+                if (d.getValue() == 5) {
+                    safePick.add(d);
+                    return safePick;
+                }
             }
         }
 
