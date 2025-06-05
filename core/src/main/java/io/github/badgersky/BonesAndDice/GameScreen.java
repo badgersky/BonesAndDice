@@ -92,27 +92,41 @@ public class GameScreen implements Screen {
         if (pcTimer <= 0) {
             pcTimer = 2f;
 
-            if (pcAction == 0) {
-                rollAndCheck(hand2, true);
-                pcAction = 1;
-            }
-            if (pcAction == 1) {
-                selectedPoints2 += pcPlayer.play();
-                pcAction = 2;
-            }
-            if (pcAction == 2) {
-                for (Dice d : hand2.dices) {
-                    if (d.selected) {selectNum += 1;}
-                }
+            switch (pcAction) {
+                case 0:
+                    System.out.println("PC rolling dices");
+                    if (hand2.dices.isEmpty()) {
+                        hand2.returnPutAwayDices();
+                    }
+                    rollAndCheck(hand2, true);
+                    pcAction = 1;
+                    break;
+                case 1:
+                    System.out.println("PC selecting dices");
+                    selectedPoints2 += pcPlayer.play();
+                    pcAction = 2;
+                    break;
+                case 2:
+                    System.out.println("PC deciding if he brave or not");
+                    for (Dice d : hand2.dices) {
+                        if (d.selected) {
+                            selectNum += 1;
+                        }
+                    }
 
-                if (selectNum > 3 && selectedPoints2 >= 500) {
-                    endPcRound(false);
-                } else {
-                    roundPoints2 += selectedPoints2;
-                    selectedPoints2 = 0;
-                }
+                    if (hand2.dices.size() < 2) {endPcRound(false);}
+                    else if (selectNum > hand2.dices.size()) {endPcRound(false);}
+                    else if (selectedPoints2 >= 500 && selectNum != 6) {endPcRound(false);}
+                    else if (roundPoints2 >= 700 && selectNum != 6) {endPcRound(false);}
+                    else if (hand2.putAwayDices.size() >= 4) {endPcRound(false);
+                    } else {
+                        hand2.putAwaySelectedDices();
+                        roundPoints2 += selectedPoints2;
+                        selectedPoints2 = 0;
+                    }
 
-                pcAction = 0;
+                    pcAction = 0;
+                    break;
             }
         }
     }
@@ -194,6 +208,20 @@ public class GameScreen implements Screen {
         }
     }
 
+    private void drawPutAwayPCDices() {
+        float diceSize = 1;
+        for (int i = 0; i < hand2.putAwayDices.size(); i++) {
+            Dice dice = hand2.putAwayDices.get(i);
+            String key = "dice" + dice.getValue();
+
+            TextureRegion region = diceRegions.get(key);
+            float y = 5.5f - i * diceSize;
+            float x = 0.5f;
+
+            game.batch.draw(region, x, y, diceSize, diceSize);
+        }
+    }
+
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
         game.viewport.apply();
@@ -203,6 +231,7 @@ public class GameScreen implements Screen {
         drawDices();
         drawPutAwayDices();
         drawComputerDices();
+        drawPutAwayPCDices();
         drawMsg();
         drawPoints();
         game.batch.end();
@@ -287,6 +316,9 @@ public class GameScreen implements Screen {
     public void endPcRound(boolean fail) {
         if (!fail) {
             totalPoints2 += roundPoints2 + selectedPoints2;
+            System.out.println("pc finishing its round counting points");
+        } else {
+            System.out.println("pc failed!");
         }
 
         roundPoints2 = 0;
@@ -294,6 +326,7 @@ public class GameScreen implements Screen {
         hand2.returnPutAwayDices();
         hand2.resetSelection();
         playerTurn = true;
+        rollAndCheck(hand1, false);
     }
 
     public void endRound(boolean fail) {
