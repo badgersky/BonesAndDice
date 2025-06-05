@@ -1,29 +1,35 @@
 package io.github.badgersky.BonesAndDice;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 
-public class MainMenuScreen implements Screen {
+public class EndScreen implements Screen {
 
     final Main game;
     private final Texture background;
     private final Stage stage;
     private final TextureAtlas buttonAtlas;
+    private TextureRegion msg;
+    private Image msgImage;
 
-    public MainMenuScreen(final Main game) {
+    public EndScreen(Main game, TextureRegion msg) {
+        this.msg = msg;
         this.game = game;
 
-        background = new Texture("menu_background.png");
+        background = new Texture("pause_background.png");
+        msgImage = new Image(msg);
 
         stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
@@ -40,8 +46,24 @@ public class MainMenuScreen implements Screen {
         quitBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn_hover"));
         quitBtnStyle.down = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn_click"));
 
+        ImageButton.ImageButtonStyle menuBtnStyle = new ImageButton.ImageButtonStyle();
+        menuBtnStyle.up = new TextureRegionDrawable(buttonAtlas.findRegion("menubtn"));
+        menuBtnStyle.down = new TextureRegionDrawable(buttonAtlas.findRegion("menubtn_click"));
+        menuBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("menubtn_hover"));
+
         ImageButton playBtn = new ImageButton(playBtnStyle);
         ImageButton quitBtn = new ImageButton(quitBtnStyle);
+        ImageButton menuBtn = new ImageButton(menuBtnStyle);
+
+        menuBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                long id = game.btnSound.play(1f);
+                game.btnSound.setPitch(id, 0.8f);
+                game.btnSound.setVolume(id, 0.2f);
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
 
         playBtn.addListener(new ClickListener() {
             @Override
@@ -50,7 +72,6 @@ public class MainMenuScreen implements Screen {
                 game.btnSound.setPitch(id, 0.8f);
                 game.btnSound.setVolume(id, 0.2f);
                 game.setScreen(new GameScreen(game));
-                dispose();
             }
         });
 
@@ -68,12 +89,19 @@ public class MainMenuScreen implements Screen {
         table.setFillParent(true);
         table.center();
 
+        table.add(msgImage).size(2f, 1f).row();
         table.add(playBtn).size(2f, 1f).row();
+        table.add(menuBtn).size(2f, 1f).row();
         table.add(quitBtn).size(2f, 1f).row();
 
-        table.padBottom(2f);
+        table.padBottom(0.3f);
 
         stage.addActor(table);
+    }
+
+    @Override
+    public void show() {
+
     }
 
     @Override
@@ -99,11 +127,6 @@ public class MainMenuScreen implements Screen {
     public void resize(int width, int height) {
         game.viewport.update(width, height, true);
         stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void show() {
-
     }
 
     @Override

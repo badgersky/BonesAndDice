@@ -25,6 +25,7 @@ public class PauseScreen implements Screen {
     public PauseScreen(Main game, GameScreen gameScreen) {
         this.game = game;
         this.gameScreen = gameScreen;
+
         background = new Texture("pause_background.png");
 
         stage = new Stage(game.viewport, game.batch);

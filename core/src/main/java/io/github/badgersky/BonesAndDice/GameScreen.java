@@ -85,7 +85,7 @@ public class GameScreen implements Screen {
         playerTurn = true;
         shouldRollAtStart = true;
 
-        winningPoints = 4000;
+        winningPoints = 100;
     }
 
     private void pcTurn(float delta) {
@@ -333,6 +333,16 @@ public class GameScreen implements Screen {
         }
     }
 
+    private void checkEndGame() {
+        if (totalPoints2 >= winningPoints) {
+            game.setScreen(new EndScreen(game, msgLose));
+            dispose();
+        } else if (totalPoints1 >= winningPoints) {
+            game.setScreen(new EndScreen(game, msgWin));
+            dispose();
+        }
+    }
+
     public void endPcRound(boolean fail) {
         if (!fail) {
             totalPoints2 += roundPoints2 + selectedPoints2;
@@ -348,6 +358,8 @@ public class GameScreen implements Screen {
         playerTurn = true;
         shouldRollAtStart = true;
         pcAction = 0;
+
+        checkEndGame();
     }
 
     public void endRound(boolean fail) {
@@ -366,6 +378,8 @@ public class GameScreen implements Screen {
         playerTurn = false;
         shouldRollAtStart = true;
         pcAction = 0;
+
+        checkEndGame();
     }
 
     @Override
@@ -422,6 +436,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        background.dispose();
+        diceAtlas.dispose();
     }
 }
