@@ -35,6 +35,7 @@ public class GameScreen implements Screen {
     private int selectedPoints1;
     private int totalPoints1;
     private boolean playerTurn;
+    private PcPlayer pcPlayer;
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -61,6 +62,8 @@ public class GameScreen implements Screen {
         hand2 = new Hand();
         diceIndex = 0;
 
+        pcPlayer = new PcPlayer(hand2);
+
         roundPoints1 = 0;
         selectedPoints1 = 0;
         totalPoints1 = 0;
@@ -83,14 +86,16 @@ public class GameScreen implements Screen {
         float diceSize = 1;
         float spacing = 0.2f;
         float totalSize = diceSize + spacing;
+        float startX = 1.8f;
+        float y = 1;
+        float x;
 
         for (int i = 0; i < hand1.dices.size(); i++) {
             Dice dice = hand1.dices.get(i);
             String key = "dice" + dice.getValue();
 
             TextureRegion region = diceRegions.get(key);
-            float x = 1.8f + i * totalSize;
-            float y = 1;
+            x = startX + i * totalSize;
             if (i == diceIndex && dice.selected) {
                 game.batch.draw(hoverChosenRegion, x, y, diceSize, diceSize);
             } else if (i == diceIndex) {
@@ -99,6 +104,29 @@ public class GameScreen implements Screen {
                 game.batch.draw(chosenRegion, x, y, diceSize, diceSize);
             }
 
+            game.batch.draw(region, x, y, diceSize, diceSize);
+        }
+    }
+
+    private void drawComputerDices() {
+        float diceSize = 1;
+        float spacing = 0.2f;
+        float totalSize = diceSize + spacing;
+
+        float startX = 1.8f;
+        float y = 5.5f;
+        float x;
+
+        for (int i = 0; i < hand2.dices.size(); i++) {
+            Dice dice = hand2.dices.get(i);
+            String key = "dice" + dice.getValue();
+
+            TextureRegion region = diceRegions.get(key);
+            x = startX + i * totalSize;
+
+            if (dice.selected) {
+                game.batch.draw(chosenRegion, x, y, diceSize, diceSize);
+            }
             game.batch.draw(region, x, y, diceSize, diceSize);
         }
     }
@@ -125,6 +153,7 @@ public class GameScreen implements Screen {
         game.batch.draw(background, 0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
         drawDices();
         drawPutAwayDices();
+        drawComputerDices();
         drawMsg();
         drawPoints();
         game.batch.end();
