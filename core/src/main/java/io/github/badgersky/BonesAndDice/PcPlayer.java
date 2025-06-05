@@ -19,7 +19,7 @@ public class PcPlayer {
         return 1;
     }
 
-    private List<List<Dice>> generateSubsets() {
+    public List<List<Dice>> generateSubsets() {
         List<List<Dice>> subsets = new ArrayList<>();
 
         for (Dice d : hand.dices) {

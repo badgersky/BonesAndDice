@@ -12,6 +12,11 @@ public class Dice {
         rollDice();
     }
 
+    @Override
+    public String toString() {
+        return "dice " + value;
+    }
+
     public void rollDice() {
         value = new Random().nextInt(6) + 1;
     }
