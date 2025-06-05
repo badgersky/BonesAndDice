@@ -12,6 +12,7 @@ import com.sun.tools.javac.comp.Todo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class GameScreen implements Screen {
 
@@ -34,8 +35,13 @@ public class GameScreen implements Screen {
     private int roundPoints1;
     private int selectedPoints1;
     private int totalPoints1;
+    private int roundPoints2;
+    private int selectedPoints2;
+    private int totalPoints2;
     private boolean playerTurn;
     private PcPlayer pcPlayer;
+    private float pcTimer;
+    private int pcAction;
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -63,23 +69,66 @@ public class GameScreen implements Screen {
         diceIndex = 0;
 
         pcPlayer = new PcPlayer(hand2);
+        pcTimer = 0.7f;
+        pcAction = 0;
 
         roundPoints1 = 0;
         selectedPoints1 = 0;
         totalPoints1 = 0;
 
+        roundPoints2 = 0;
+        selectedPoints2 = 0;
+        totalPoints2 = 0;
+
         playerTurn = true;
 
-        rollAndCheck(hand1);
+        rollAndCheck(hand1, false);
+    }
+
+    private void pcTurn(float delta) {
+        int selectNum = 0;
+
+        pcTimer -= delta;
+        if (pcTimer <= 0) {
+            pcTimer = 2f;
+
+            if (pcAction == 0) {
+                rollAndCheck(hand2, true);
+                pcAction = 1;
+            }
+            if (pcAction == 1) {
+                selectedPoints2 += pcPlayer.play();
+                pcAction = 2;
+            }
+            if (pcAction == 2) {
+                for (Dice d : hand2.dices) {
+                    if (d.selected) {selectNum += 1;}
+                }
+
+                if (selectNum > 3 && selectedPoints2 >= 500) {
+                    endPcRound(false);
+                } else {
+                    roundPoints2 += selectedPoints2;
+                    selectedPoints2 = 0;
+                }
+
+                pcAction = 0;
+            }
+        }
     }
 
     private void drawPoints() {
         float x = game.viewport.getWorldWidth() - 1.6f;
-        float y = 2;
+        float y1 = 2;
+        float y2 = 6.5f;
 
-        game.font.draw(game.batch, "Selected: " + selectedPoints1, x, y);
-        game.font.draw(game.batch, "Round: " + roundPoints1, x, y - 0.4f);
-        game.font.draw(game.batch, "Total: " + totalPoints1, x, y - 0.8f);
+        game.font.draw(game.batch, "Selected: " + selectedPoints1, x, y1);
+        game.font.draw(game.batch, "Round: " + roundPoints1, x, y1 - 0.4f);
+        game.font.draw(game.batch, "Total: " + totalPoints1, x, y1 - 0.8f);
+
+        game.font.draw(game.batch, "Selected: " + selectedPoints2, x, y2);
+        game.font.draw(game.batch, "Round: " + roundPoints2, x, y2 - 0.4f);
+        game.font.draw(game.batch, "Total: " + totalPoints2, x, y2 - 0.8f);
     }
 
     private void drawDices() {
@@ -213,7 +262,7 @@ public class GameScreen implements Screen {
                         hand1.returnPutAwayDices();
                     }
 
-                    rollAndCheck(hand1);
+                    rollAndCheck(hand1, false);
                 }
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
@@ -224,11 +273,27 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void rollAndCheck(Hand hand) {
+    private void rollAndCheck(Hand hand, boolean pc) {
         hand.rollHand();
         if (hand.hasNoPoints()) {
-            endRound(true);
+            if (pc) {
+                endPcRound(true);
+            } else {
+                endRound(true);
+            }
         }
+    }
+
+    public void endPcRound(boolean fail) {
+        if (!fail) {
+            totalPoints2 += roundPoints2 + selectedPoints2;
+        }
+
+        roundPoints2 = 0;
+        selectedPoints2 = 0;
+        hand2.returnPutAwayDices();
+        hand2.resetSelection();
+        playerTurn = true;
     }
 
     public void endRound(boolean fail) {
@@ -250,6 +315,10 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         input();
+
+        if (!playerTurn) {
+            pcTurn(delta);
+        }
 
         if (msgTimer > 0) {
             msgTimer -= delta;

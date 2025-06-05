@@ -14,13 +14,13 @@ public class PcPlayer {
     public int play() {
         List<Dice> bestChoice;
 
-        if (hand.hasNoPoints()) {
-            return -1;
-        }
-
         bestChoice = chooseBestCombo();
 
-        return 1;
+        for (Dice d : bestChoice) {
+            d.markSelected();
+        }
+
+        return hand.countPoints();
     }
 
     public List<List<Dice>> generateSubsets() {
