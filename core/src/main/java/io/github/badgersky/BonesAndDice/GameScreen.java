@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.sun.tools.javac.comp.Todo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameScreen implements Screen {
@@ -20,19 +21,27 @@ public class GameScreen implements Screen {
     private Hand hand2;
     private int diceIndex;
     private final TextureAtlas diceAtlas;
+    private final TextureAtlas msgAtlas;
     private final HashMap<String, TextureRegion> diceRegions;
     private final TextureRegion hoverRegion;
     private final TextureRegion chosenRegion;
     private final TextureRegion hoverChosenRegion;
+    private final TextureRegion msgFail;
+    private final TextureRegion msgWin;
+    private final TextureRegion msgLose;
+    private float msgTimer;
+    private TextureRegion currMsg;
     private int roundPoints1;
     private int selectedPoints1;
     private int totalPoints1;
+    private boolean playerTurn;
 
     public GameScreen(final Main game) {
         this.game = game;
 
         background = new Texture("game_background.png");
         diceAtlas = new TextureAtlas(Gdx.files.internal("dices.atlas"));
+        msgAtlas = new TextureAtlas(Gdx.files.internal("messages.atlas"));
 
         diceRegions = new HashMap<>();
         for (int i = 1; i <= 6; i++) {
@@ -42,6 +51,12 @@ public class GameScreen implements Screen {
         chosenRegion = new TextureRegion(diceAtlas.findRegion("chosen"));
         hoverChosenRegion = new TextureRegion(diceAtlas.findRegion("chosenhover"));
 
+        msgFail = new TextureRegion(msgAtlas.findRegion("fail"));
+        msgLose = new TextureRegion(msgAtlas.findRegion("lose"));
+        msgWin = new TextureRegion(msgAtlas.findRegion("win"));
+        currMsg = null;
+        msgTimer = 0f;
+
         hand1 = new Hand();
         hand2 = new Hand();
         diceIndex = 0;
@@ -49,6 +64,8 @@ public class GameScreen implements Screen {
         roundPoints1 = 0;
         selectedPoints1 = 0;
         totalPoints1 = 0;
+
+        playerTurn = true;
 
         rollAndCheck(hand1);
     }
@@ -84,7 +101,10 @@ public class GameScreen implements Screen {
 
             game.batch.draw(region, x, y, diceSize, diceSize);
         }
+    }
 
+    private void drawPutAwayDices() {
+        float diceSize = 1;
         for (int i = 0; i < hand1.putAwayDices.size(); i++) {
             Dice dice = hand1.putAwayDices.get(i);
             String key = "dice" + dice.getValue();
@@ -104,54 +124,73 @@ public class GameScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0, game.viewport.getWorldWidth(), game.viewport.getWorldHeight());
         drawDices();
+        drawPutAwayDices();
+        drawMsg();
         drawPoints();
         game.batch.end();
+    }
+
+    private void drawMsg() {
+        float centerX = game.viewport.getWorldWidth() / 2f;
+        float centerY = game.viewport.getWorldHeight() / 2f;
+
+        float msgWidth = 4f;
+        float msgHeight = 2f;
+
+        float drawX = centerX - msgWidth / 2f;
+        float drawY = centerY - msgHeight / 2f;
+
+        if (currMsg != null) {
+            game.batch.draw(currMsg, drawX, drawY, msgWidth, msgHeight);
+        }
     }
 
     private void input() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             pause();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            if (diceIndex == hand1.dices.size() - 1) {
-                diceIndex = 0;
-            } else {
-                diceIndex += 1;
-            }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            if (diceIndex == 0) {
-                diceIndex = hand1.dices.size() - 1;
-            } else {
-                diceIndex -= 1;
-            }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            selectedPoints1 = 0;
-            if (hand1.dices.get(diceIndex).selected) {
-                hand1.unselectDice(diceIndex);
-            } else {
-                hand1.selectDice(diceIndex);
-            }
-            selectedPoints1 += hand1.countPoints();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            if (hand1.countPoints() > 0) {
-                hand1.putAwaySelectedDices();
-                roundPoints1 += selectedPoints1;
-                selectedPoints1 = 0;
-                diceIndex = 0;
-
-                if (hand1.dices.isEmpty()) {
-                    hand1.returnPutAwayDices();
+        if (playerTurn) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                if (diceIndex == hand1.dices.size() - 1) {
+                    diceIndex = 0;
+                } else {
+                    diceIndex += 1;
                 }
-
-                rollAndCheck(hand1);
             }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            if (hand1.countPoints() > 0) {
-                endRound(false);
+            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                if (diceIndex == 0) {
+                    diceIndex = hand1.dices.size() - 1;
+                } else {
+                    diceIndex -= 1;
+                }
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                selectedPoints1 = 0;
+                if (hand1.dices.get(diceIndex).selected) {
+                    hand1.unselectDice(diceIndex);
+                } else {
+                    hand1.selectDice(diceIndex);
+                }
+                selectedPoints1 += hand1.countPoints();
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+                if (hand1.countPoints() > 0) {
+                    hand1.putAwaySelectedDices();
+                    roundPoints1 += selectedPoints1;
+                    selectedPoints1 = 0;
+                    diceIndex = 0;
+
+                    if (hand1.dices.isEmpty()) {
+                        hand1.returnPutAwayDices();
+                    }
+
+                    rollAndCheck(hand1);
+                }
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+                if (hand1.countPoints() > 0) {
+                    endRound(false);
+                }
             }
         }
     }
@@ -167,23 +206,30 @@ public class GameScreen implements Screen {
         if (!fail) {
             totalPoints1 += roundPoints1 + selectedPoints1;
         } else {
-            System.out.println("FAIL!!! You lose all points in this round!!!");
+            currMsg = msgFail;
+            msgTimer = 2f;
         }
 
         roundPoints1 = 0;
         selectedPoints1 = 0;
         hand1.returnPutAwayDices();
         diceIndex = 0;
-        hand1.rollHand();
         hand1.resetSelection();
-
-        // TODO: computers round
+        playerTurn = false;
     }
 
     @Override
-    public void render(float v) {
-        draw();
+    public void render(float delta) {
         input();
+
+        if (msgTimer > 0) {
+            msgTimer -= delta;
+            if (msgTimer <= 0) {
+                currMsg = null;
+            }
+        }
+
+        draw();
     }
 
     @Override

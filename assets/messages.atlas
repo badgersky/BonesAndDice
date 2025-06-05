@@ -1,0 +1,9 @@
+messages.png
+size:1024,256
+repeat:none
+fail
+bounds:260,2,256,128
+lose
+bounds:518,2,256,128
+win
+bounds:2,2,256,128
