@@ -1,0 +1,13 @@
+keys.png
+size:1024,256
+repeat:none
+arrow_key
+bounds:262,2,128,128
+e_key
+bounds:132,2,128,128
+esc_key
+bounds:2,2,128,128
+f_key
+bounds:392,2,128,128
+q_key
+bounds:522,2,128,128

@@ -17,8 +17,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class PauseScreen implements Screen {
 
     final Main game;
-    final GameScreen gameScreen;
-    Texture background;
+    private final GameScreen gameScreen;
+    private final Texture background;
     private Stage stage;
     private final TextureAtlas buttonAtlas;
 
