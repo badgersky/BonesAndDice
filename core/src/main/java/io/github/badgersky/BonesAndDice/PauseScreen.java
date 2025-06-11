@@ -17,8 +17,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class PauseScreen implements Screen {
 
     final Main game;
-    final GameScreen gameScreen;
-    Texture background;
+    private final GameScreen gameScreen;
+    private final Texture background;
     private Stage stage;
     private final TextureAtlas buttonAtlas;
 
@@ -48,9 +48,22 @@ public class PauseScreen implements Screen {
         menuBtnStyle.down = new TextureRegionDrawable(buttonAtlas.findRegion("menubtn_click"));
         menuBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("menubtn_hover"));
 
+        ImageButton.ImageButtonStyle controlsBtnStyle = new ImageButton.ImageButtonStyle();
+        controlsBtnStyle.up = new TextureRegionDrawable(buttonAtlas.findRegion("controlsbtn"));
+        controlsBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("controlsbtn_hover"));
+        controlsBtnStyle.down = new TextureRegionDrawable(buttonAtlas.findRegion("controlsbtn_click"));
+
         ImageButton backBtn = new ImageButton(backBtnStyle);
         ImageButton quitBtn = new ImageButton(quitBtnStyle);
         ImageButton menuBtn = new ImageButton(menuBtnStyle);
+        ImageButton controlsBtn = new ImageButton(controlsBtnStyle);
+
+        controlsBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new ControlScreen(game, PauseScreen.this));
+            }
+        });
 
         menuBtn.addListener(new ClickListener() {
             @Override
@@ -58,7 +71,7 @@ public class PauseScreen implements Screen {
 //                long id = game.btnSound.play(1f);
 //                game.btnSound.setPitch(id, 0.8f);
 //                game.btnSound.setVolume(id, 0.2f);
-//                game.setScreen(new MainMenuScreen(game));
+                game.setScreen(new MainMenuScreen(game));
                 gameScreen.dispose();
                 dispose();
             }
@@ -89,17 +102,16 @@ public class PauseScreen implements Screen {
         table.center();
 
         table.add(backBtn).size(2f, 1f).row();
+        table.add(controlsBtn).size(2f, 1f).row();
         table.add(menuBtn).size(2f, 1f).row();
         table.add(quitBtn).size(2f, 1f).row();
-
-        table.padBottom(1f);
 
         stage.addActor(table);
     }
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -151,6 +163,8 @@ public class PauseScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        background.dispose();
+        stage.dispose();
+        buttonAtlas.dispose();
     }
 }
