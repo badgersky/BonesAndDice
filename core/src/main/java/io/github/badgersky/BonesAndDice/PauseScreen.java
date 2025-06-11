@@ -111,7 +111,7 @@ public class PauseScreen implements Screen {
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -163,6 +163,8 @@ public class PauseScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        background.dispose();
+        stage.dispose();
+        buttonAtlas.dispose();
     }
 }

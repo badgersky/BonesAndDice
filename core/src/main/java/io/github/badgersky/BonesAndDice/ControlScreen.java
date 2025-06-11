@@ -59,7 +59,7 @@ public class ControlScreen implements Screen {
             Image keyImage = new Image(keyRegion);
             Label keyLabel = new Label(description[i], labelStyle);
 
-            keysTable.add(keyImage).size(1f, 1f).padBottom(0.3f).left();
+            keysTable.add(keyImage).size(1f, 1f).left();
             keysTable.add(keyLabel).padLeft(0.5f).left();
             keysTable.row();
         }
@@ -75,14 +75,14 @@ public class ControlScreen implements Screen {
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                resume();
+                game.setScreen(prevScreen);
             }
         });
 
         Table backBtnTable = new Table();
-        backBtnTable.top().left().padBottom(1f).padLeft(1f);
+        backBtnTable.bottom().right().padBottom(1f).padRight(1f);
         backBtnTable.setFillParent(true);
-        backBtnTable.add(backBtn);
+        backBtnTable.add(backBtn).size(2f, 1f);
 
         stage.addActor(backBtnTable);
     }
@@ -103,7 +103,7 @@ public class ControlScreen implements Screen {
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -134,6 +134,8 @@ public class ControlScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        background.dispose();
+        stage.dispose();
+        buttonAtlas.dispose();
     }
 }
