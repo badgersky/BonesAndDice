@@ -349,6 +349,8 @@ public class GameScreen implements Screen {
             System.out.println("pc finishing its round counting points");
         } else {
             System.out.println("pc failed!");
+            currMsg = msgFail;
+            msgTimer = 2f;
         }
 
         roundPoints2 = 0;
