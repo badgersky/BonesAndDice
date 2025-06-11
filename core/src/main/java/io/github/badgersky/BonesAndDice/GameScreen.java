@@ -44,6 +44,8 @@ public class GameScreen implements Screen {
     private int pcAction;
     public int winningPoints;
     private boolean shouldRollAtStart;
+    private Texture playerTurnMsg;
+    private Texture pcTurnMsg;
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -51,6 +53,9 @@ public class GameScreen implements Screen {
         background = new Texture("game_background.png");
         diceAtlas = new TextureAtlas(Gdx.files.internal("dices.atlas"));
         msgAtlas = new TextureAtlas(Gdx.files.internal("messages.atlas"));
+
+        playerTurnMsg = new Texture("your_turn.png");
+        pcTurnMsg = new Texture("pc_turn.png");
 
         diceRegions = new HashMap<>();
         for (int i = 1; i <= 6; i++) {
@@ -254,7 +259,19 @@ public class GameScreen implements Screen {
         drawPutAwayPCDices();
         drawMsg();
         drawPoints();
+        drawTurnMsg();
         game.batch.end();
+    }
+
+    private void drawTurnMsg() {
+        float x = 0.1f;
+        float y = game.viewport.getWorldHeight() - 0.7f;
+
+        if (playerTurn) {
+            game.batch.draw(playerTurnMsg, x, y, 1.5f, 0.6f);
+        } else {
+            game.batch.draw(pcTurnMsg, x, y, 1.5f, 0.6f);
+        }
     }
 
     private void drawMsg() {
@@ -349,6 +366,8 @@ public class GameScreen implements Screen {
             System.out.println("pc finishing its round counting points");
         } else {
             System.out.println("pc failed!");
+            currMsg = msgFail;
+            msgTimer = 2f;
         }
 
         roundPoints2 = 0;
