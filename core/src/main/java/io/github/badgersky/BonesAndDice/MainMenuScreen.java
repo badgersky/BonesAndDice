@@ -40,8 +40,21 @@ public class MainMenuScreen implements Screen {
         quitBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn_hover"));
         quitBtnStyle.down = new TextureRegionDrawable(buttonAtlas.findRegion("quitbtn_click"));
 
+        ImageButton.ImageButtonStyle controlsBtnStyle = new ImageButton.ImageButtonStyle();
+        controlsBtnStyle.up = new TextureRegionDrawable(buttonAtlas.findRegion("controlsbtn"));
+        controlsBtnStyle.over = new TextureRegionDrawable(buttonAtlas.findRegion("controlsbtn_hover"));
+        controlsBtnStyle.down = new TextureRegionDrawable(buttonAtlas.findRegion("controlsbtn_click"));
+
         ImageButton playBtn = new ImageButton(playBtnStyle);
         ImageButton quitBtn = new ImageButton(quitBtnStyle);
+        ImageButton controlsBtn = new ImageButton(controlsBtnStyle);
+
+        controlsBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new ControlScreen(game, MainMenuScreen.this));
+            }
+        });
 
         playBtn.addListener(new ClickListener() {
             @Override
@@ -69,9 +82,10 @@ public class MainMenuScreen implements Screen {
         table.center();
 
         table.add(playBtn).size(2f, 1f).row();
+        table.add(controlsBtn).size(2f, 1f).row();
         table.add(quitBtn).size(2f, 1f).row();
 
-        table.padBottom(2f);
+        table.padBottom(1f);
 
         stage.addActor(table);
     }
