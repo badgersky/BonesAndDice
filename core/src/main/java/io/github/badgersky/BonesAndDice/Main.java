@@ -1,8 +1,6 @@
 package io.github.badgersky.BonesAndDice;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,8 +11,6 @@ public class Main extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
     public StretchViewport viewport;
-    public Sound btnSound;
-    public Sound diceSound;
 
     @Override
     public void create() {
@@ -25,9 +21,6 @@ public class Main extends Game {
         font.setUseIntegerPositions(false);
         font.getData().setScale(0.014f);
         font.setColor(Color.WHITE);
-
-        btnSound = Gdx.audio.newSound(Gdx.files.internal("buttons.mp3"));
-        diceSound = Gdx.audio.newSound(Gdx.files.internal("dice.mp3"));
 
         this.setScreen(new MainMenuScreen(this));
     }

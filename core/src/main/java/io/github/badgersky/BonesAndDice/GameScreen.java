@@ -8,11 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.sun.tools.javac.comp.Todo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class GameScreen implements Screen {
 
