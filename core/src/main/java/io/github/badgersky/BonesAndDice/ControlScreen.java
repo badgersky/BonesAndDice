@@ -137,5 +137,6 @@ public class ControlScreen implements Screen {
         background.dispose();
         stage.dispose();
         buttonAtlas.dispose();
+        keyAtlas.dispose();
     }
 }

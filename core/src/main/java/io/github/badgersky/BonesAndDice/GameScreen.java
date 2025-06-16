@@ -457,5 +457,8 @@ public class GameScreen implements Screen {
     public void dispose() {
         background.dispose();
         diceAtlas.dispose();
+//        msgAtlas.dispose();
+        playerTurnMsg.dispose();
+        pcTurnMsg.dispose();
     }
 }

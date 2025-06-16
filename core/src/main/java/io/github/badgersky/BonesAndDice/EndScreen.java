@@ -21,11 +21,9 @@ public class EndScreen implements Screen {
     private final Texture background;
     private final Stage stage;
     private final TextureAtlas buttonAtlas;
-    private TextureRegion msg;
     private Image msgImage;
 
     public EndScreen(Main game, TextureRegion msg) {
-        this.msg = msg;
         this.game = game;
 
         background = new Texture("pause_background.png");
